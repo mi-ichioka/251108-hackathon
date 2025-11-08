@@ -8,8 +8,8 @@ import { TaskList } from './components/TaskList';
 
 const STORAGE_KEY = 'task-priority-ai-tasks';
 
-// ダミーデータ
-const SAMPLE_TASKS: Task[] = [
+// 通常のダミーデータ
+const SAMPLE_TASKS_NORMAL: Task[] = [
   // 山田太郎のタスク (member-1)
   {
     id: 'task-1',
@@ -285,12 +285,568 @@ const SAMPLE_TASKS: Task[] = [
   },
 ];
 
+// 平和モードのダミーデータ（緊急でも重要でもないタスクが多い状態）
+const SAMPLE_TASKS_PEACEFUL: Task[] = [
+  // 山田太郎のタスク (member-1)
+  {
+    id: 'task-1',
+    title: '技術ブログ執筆',
+    description: '新しい技術スタックについてのブログ記事を書く',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 3,
+    assignedTo: 'member-1',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T09:00:00'),
+    updatedAt: new Date('2025-11-08T09:00:00'),
+  },
+  {
+    id: 'task-2',
+    title: '開発環境の整理',
+    description: '使わなくなったツールやライブラリを整理',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 2,
+    assignedTo: 'member-1',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T09:15:00'),
+    updatedAt: new Date('2025-11-08T09:15:00'),
+  },
+  {
+    id: 'task-3',
+    title: 'オンライン勉強会の視聴',
+    description: '気になっていたオンライン勉強会のアーカイブを見る',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 3,
+    assignedTo: 'member-1',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T09:30:00'),
+    updatedAt: new Date('2025-11-08T09:30:00'),
+  },
+  {
+    id: 'task-4',
+    title: 'デスク周りの整理整頓',
+    description: 'デスクを綺麗にして作業環境を快適に',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 1,
+    assignedTo: 'member-1',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T09:45:00'),
+    updatedAt: new Date('2025-11-08T09:45:00'),
+  },
+
+  // 佐藤花子のタスク (member-2)
+  {
+    id: 'task-5',
+    title: 'チームビルディングアイデア検討',
+    description: '次のチームイベントのアイデアを考える',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 2,
+    assignedTo: 'member-2',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T10:00:00'),
+    updatedAt: new Date('2025-11-08T10:00:00'),
+  },
+  {
+    id: 'task-6',
+    title: '業界ニュースのチェック',
+    description: '最新の業界トレンドをキャッチアップ',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 3,
+    assignedTo: 'member-2',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T10:15:00'),
+    updatedAt: new Date('2025-11-08T10:15:00'),
+  },
+  {
+    id: 'task-7',
+    title: 'お気に入り記事の整理',
+    description: 'ブックマークしている記事を整理',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 1,
+    assignedTo: 'member-2',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T10:30:00'),
+    updatedAt: new Date('2025-11-08T10:30:00'),
+  },
+  {
+    id: 'task-8',
+    title: 'コーヒーブレイク',
+    description: 'リフレッシュのためのコーヒータイム',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 3,
+    importanceScore: 2,
+    assignedTo: 'member-2',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T10:45:00'),
+    updatedAt: new Date('2025-11-08T10:45:00'),
+  },
+  {
+    id: 'task-9',
+    title: '古いメールの整理',
+    description: '溜まっている古いメールをアーカイブ',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 1,
+    assignedTo: 'member-2',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T11:00:00'),
+    updatedAt: new Date('2025-11-08T11:00:00'),
+  },
+
+  // 鈴木一郎のタスク (member-3)
+  {
+    id: 'task-10',
+    title: '新しいツールの調査',
+    description: '話題の開発ツールを試してみる',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 3,
+    assignedTo: 'member-3',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T11:15:00'),
+    updatedAt: new Date('2025-11-08T11:15:00'),
+  },
+  {
+    id: 'task-11',
+    title: 'テストコードのリファクタリング',
+    description: 'テストコードを読みやすく整理',
+    priority: 'not-urgent-important',
+    urgencyScore: 1,
+    importanceScore: 5,
+    assignedTo: 'member-3',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T11:30:00'),
+    updatedAt: new Date('2025-11-08T11:30:00'),
+  },
+  {
+    id: 'task-12',
+    title: 'ドキュメントの誤字修正',
+    description: '見つけた誤字を修正',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 2,
+    assignedTo: 'member-3',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T11:45:00'),
+    updatedAt: new Date('2025-11-08T11:45:00'),
+  },
+  {
+    id: 'task-13',
+    title: 'ストレッチ休憩',
+    description: '体をほぐして健康維持',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 2,
+    assignedTo: 'member-3',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T12:00:00'),
+    updatedAt: new Date('2025-11-08T12:00:00'),
+  },
+
+  // 田中美咲のタスク (member-4)
+  {
+    id: 'task-14',
+    title: 'デザイン事例の収集',
+    description: '参考になるデザインを集める',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 3,
+    assignedTo: 'member-4',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T12:15:00'),
+    updatedAt: new Date('2025-11-08T12:15:00'),
+  },
+  {
+    id: 'task-15',
+    title: 'カラーパレットの整理',
+    description: 'よく使うカラーパレットを整理',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 2,
+    assignedTo: 'member-4',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T12:30:00'),
+    updatedAt: new Date('2025-11-08T12:30:00'),
+  },
+  {
+    id: 'task-16',
+    title: 'デザイントレンドのリサーチ',
+    description: '最新のデザイントレンドを調査',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 3,
+    assignedTo: 'member-4',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T12:45:00'),
+    updatedAt: new Date('2025-11-08T12:45:00'),
+  },
+  {
+    id: 'task-17',
+    title: '観葉植物の水やり',
+    description: 'オフィスの観葉植物に水をあげる',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 3,
+    importanceScore: 1,
+    assignedTo: 'member-4',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T13:00:00'),
+    updatedAt: new Date('2025-11-08T13:00:00'),
+  },
+
+  // 高橋健太のタスク (member-5)
+  {
+    id: 'task-18',
+    title: 'ファイルの整理',
+    description: 'デスクトップのファイルを整理',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 2,
+    assignedTo: 'member-5',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T13:15:00'),
+    updatedAt: new Date('2025-11-08T13:15:00'),
+  },
+  {
+    id: 'task-19',
+    title: '技術記事の読書',
+    description: '気になっていた技術記事を読む',
+    priority: 'not-urgent-important',
+    urgencyScore: 1,
+    importanceScore: 5,
+    assignedTo: 'member-5',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T13:30:00'),
+    updatedAt: new Date('2025-11-08T13:30:00'),
+  },
+  {
+    id: 'task-20',
+    title: 'Slackの絵文字追加',
+    description: 'チームで使える楽しい絵文字を追加',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 1,
+    assignedTo: 'member-5',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T13:45:00'),
+    updatedAt: new Date('2025-11-08T13:45:00'),
+  },
+  {
+    id: 'task-21',
+    title: '同僚との雑談',
+    description: 'チームメンバーと軽い雑談',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 2,
+    assignedTo: 'member-5',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T14:00:00'),
+    updatedAt: new Date('2025-11-08T14:00:00'),
+  },
+  {
+    id: 'task-22',
+    title: '散歩',
+    description: '気分転換に軽く散歩',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 2,
+    assignedTo: 'member-5',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T14:15:00'),
+    updatedAt: new Date('2025-11-08T14:15:00'),
+  },
+];
+
+// 危機モードのダミーデータ（緊急かつ重要なタスクが多い状態）
+const SAMPLE_TASKS_CRISIS: Task[] = [
+  // 山田太郎のタスク (member-1)
+  {
+    id: 'task-1',
+    title: '緊急システム障害対応',
+    description: '本番環境で発生した重大な障害の対応が必要',
+    priority: 'urgent-important',
+    urgencyScore: 9,
+    importanceScore: 10,
+    assignedTo: 'member-1',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T09:00:00'),
+    updatedAt: new Date('2025-11-08T09:00:00'),
+  },
+  {
+    id: 'task-2',
+    title: 'クライアント向け緊急報告書作成',
+    description: '重大インシデントのクライアントへの報告が今日中に必要',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 9,
+    assignedTo: 'member-1',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T09:15:00'),
+    updatedAt: new Date('2025-11-08T09:15:00'),
+  },
+  {
+    id: 'task-3',
+    title: 'セキュリティパッチ適用',
+    description: '重大な脆弱性のパッチを緊急で適用する必要がある',
+    priority: 'urgent-important',
+    urgencyScore: 9,
+    importanceScore: 8,
+    assignedTo: 'member-1',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T09:30:00'),
+    updatedAt: new Date('2025-11-08T09:30:00'),
+  },
+  {
+    id: 'task-4',
+    title: 'データベースバックアップ復旧',
+    description: 'データ損失を防ぐため緊急でバックアップから復旧',
+    priority: 'urgent-important',
+    urgencyScore: 10,
+    importanceScore: 9,
+    assignedTo: 'member-1',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T09:45:00'),
+    updatedAt: new Date('2025-11-08T09:45:00'),
+  },
+
+  // 佐藤花子のタスク (member-2)
+  {
+    id: 'task-5',
+    title: '重要顧客プレゼン資料作成',
+    description: '明日の大型案件プレゼンの資料を今日中に完成させる',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 9,
+    assignedTo: 'member-2',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T10:00:00'),
+    updatedAt: new Date('2025-11-08T10:00:00'),
+  },
+  {
+    id: 'task-6',
+    title: 'プロジェクト予算承認取得',
+    description: '期限が迫っているプロジェクト予算の承認を得る',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 8,
+    assignedTo: 'member-2',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T10:15:00'),
+    updatedAt: new Date('2025-11-08T10:15:00'),
+  },
+  {
+    id: 'task-7',
+    title: '契約書の最終確認',
+    description: '明日締結予定の契約書の最終確認と修正',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 7,
+    assignedTo: 'member-2',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T10:30:00'),
+    updatedAt: new Date('2025-11-08T10:30:00'),
+  },
+  {
+    id: 'task-8',
+    title: 'チームメンバーの緊急対応',
+    description: 'メンバーの急病により業務の引き継ぎが必要',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 7,
+    assignedTo: 'member-2',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T10:45:00'),
+    updatedAt: new Date('2025-11-08T10:45:00'),
+  },
+  {
+    id: 'task-9',
+    title: 'メールの整理',
+    description: '未読メールの整理と返信',
+    priority: 'not-urgent-not-important',
+    urgencyScore: 2,
+    importanceScore: 2,
+    assignedTo: 'member-2',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T11:00:00'),
+    updatedAt: new Date('2025-11-08T11:00:00'),
+  },
+
+  // 鈴木一郎のタスク (member-3)
+  {
+    id: 'task-10',
+    title: '本番環境デプロイ',
+    description: '重要機能のリリース期限が今日中',
+    priority: 'urgent-important',
+    urgencyScore: 9,
+    importanceScore: 8,
+    assignedTo: 'member-3',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T11:15:00'),
+    updatedAt: new Date('2025-11-08T11:15:00'),
+  },
+  {
+    id: 'task-11',
+    title: 'API障害の原因調査',
+    description: '顧客に影響が出ているAPI障害の原因特定が急務',
+    priority: 'urgent-important',
+    urgencyScore: 10,
+    importanceScore: 9,
+    assignedTo: 'member-3',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T11:30:00'),
+    updatedAt: new Date('2025-11-08T11:30:00'),
+  },
+  {
+    id: 'task-12',
+    title: 'パフォーマンス改善',
+    description: '顧客からのクレーム対応でパフォーマンス改善が必須',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 8,
+    assignedTo: 'member-3',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T11:45:00'),
+    updatedAt: new Date('2025-11-08T11:45:00'),
+  },
+  {
+    id: 'task-13',
+    title: '監視システムの修正',
+    description: 'システム監視が正常に動作していない問題を修正',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 7,
+    assignedTo: 'member-3',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T12:00:00'),
+    updatedAt: new Date('2025-11-08T12:00:00'),
+  },
+
+  // 田中美咲のタスク (member-4)
+  {
+    id: 'task-14',
+    title: 'UI緊急修正',
+    description: '本番環境のUI崩れを緊急で修正する必要がある',
+    priority: 'urgent-important',
+    urgencyScore: 9,
+    importanceScore: 7,
+    assignedTo: 'member-4',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T12:15:00'),
+    updatedAt: new Date('2025-11-08T12:15:00'),
+  },
+  {
+    id: 'task-15',
+    title: 'ユーザビリティテスト実施',
+    description: 'リリース前の最終ユーザビリティテストが今日中に必要',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 8,
+    assignedTo: 'member-4',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T12:30:00'),
+    updatedAt: new Date('2025-11-08T12:30:00'),
+  },
+  {
+    id: 'task-16',
+    title: 'アクセシビリティ対応',
+    description: '法的要件を満たすためのアクセシビリティ対応が急務',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 9,
+    assignedTo: 'member-4',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T12:45:00'),
+    updatedAt: new Date('2025-11-08T12:45:00'),
+  },
+  {
+    id: 'task-17',
+    title: 'デザインシステム更新',
+    description: 'ブランドリニューアルに伴うデザインシステムの更新',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 7,
+    assignedTo: 'member-4',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T13:00:00'),
+    updatedAt: new Date('2025-11-08T13:00:00'),
+  },
+
+  // 高橋健太のタスク (member-5)
+  {
+    id: 'task-18',
+    title: '顧客向け提案書作成',
+    description: '明日の商談に向けた重要な提案書を今日中に完成',
+    priority: 'urgent-important',
+    urgencyScore: 9,
+    importanceScore: 8,
+    assignedTo: 'member-5',
+    source: 'mail',
+    createdAt: new Date('2025-11-08T13:15:00'),
+    updatedAt: new Date('2025-11-08T13:15:00'),
+  },
+  {
+    id: 'task-19',
+    title: 'リリース最終確認',
+    description: '今夜リリース予定の機能の最終確認とテスト',
+    priority: 'urgent-important',
+    urgencyScore: 10,
+    importanceScore: 9,
+    assignedTo: 'member-5',
+    source: 'jira',
+    createdAt: new Date('2025-11-08T13:30:00'),
+    updatedAt: new Date('2025-11-08T13:30:00'),
+  },
+  {
+    id: 'task-20',
+    title: '緊急ドキュメント作成',
+    description: '監査対応のため緊急でドキュメントを作成',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 7,
+    assignedTo: 'member-5',
+    source: 'backlog',
+    createdAt: new Date('2025-11-08T13:45:00'),
+    updatedAt: new Date('2025-11-08T13:45:00'),
+  },
+  {
+    id: 'task-21',
+    title: '重要顧客からの問い合わせ対応',
+    description: '大口顧客からの緊急問い合わせに対応',
+    priority: 'urgent-important',
+    urgencyScore: 8,
+    importanceScore: 8,
+    assignedTo: 'member-5',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T14:00:00'),
+    updatedAt: new Date('2025-11-08T14:00:00'),
+  },
+  {
+    id: 'task-22',
+    title: 'インシデント報告会議',
+    description: '経営陣向けのインシデント報告会議の準備',
+    priority: 'urgent-important',
+    urgencyScore: 7,
+    importanceScore: 8,
+    assignedTo: 'member-5',
+    source: 'slack',
+    createdAt: new Date('2025-11-08T14:15:00'),
+    updatedAt: new Date('2025-11-08T14:15:00'),
+  },
+];
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isClassifying, setIsClassifying] = useState(false);
   const [viewMode, setViewMode] = useState<'scatter' | 'list'>('scatter');
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [isTaskInputOpen, setIsTaskInputOpen] = useState(false);
+  const [logoClickCount, setLogoClickCount] = useState(0);
+  const [taskMode, setTaskMode] = useState<0 | 1 | 2>(0); // 0: 通常, 1: 危機, 2: 平和
 
   // ローカルストレージからタスクを読み込み
   useEffect(() => {
@@ -302,11 +858,11 @@ function App() {
       } catch (error) {
         console.error('タスクの読み込みに失敗しました:', error);
         // エラーの場合はダミーデータを表示
-        setTasks(SAMPLE_TASKS);
+        setTasks(SAMPLE_TASKS_NORMAL);
       }
     } else {
       // 初回起動時はダミーデータを表示
-      setTasks(SAMPLE_TASKS);
+      setTasks(SAMPLE_TASKS_NORMAL);
     }
   }, []);
 
@@ -360,6 +916,47 @@ function App() {
     });
   };
 
+  // 隠しコマンド: ロゴを3回クリックで通常→危機→平和→通常...と切り替え
+  const handleLogoClick = () => {
+    setLogoClickCount((prev) => prev + 1);
+  };
+
+  // ロゴクリックカウントが3になったらモード切り替え
+  useEffect(() => {
+    if (logoClickCount >= 3) {
+      const newMode = ((taskMode + 1) % 3) as 0 | 1 | 2;
+      setTaskMode(newMode);
+
+      // モードに応じてタスクを切り替え
+      switch (newMode) {
+        case 0:
+          setTasks(SAMPLE_TASKS_NORMAL);
+          console.log('✅ 通常モードに切り替わりました');
+          break;
+        case 1:
+          setTasks(SAMPLE_TASKS_CRISIS);
+          console.log('🚨 危機モードに切り替わりました');
+          break;
+        case 2:
+          setTasks(SAMPLE_TASKS_PEACEFUL);
+          console.log('🌸 平和モードに切り替わりました');
+          break;
+      }
+
+      setLogoClickCount(0);
+    }
+  }, [logoClickCount, taskMode]);
+
+  // ロゴクリックカウントを2秒後にリセット
+  useEffect(() => {
+    if (logoClickCount > 0 && logoClickCount < 3) {
+      const timer = setTimeout(() => {
+        setLogoClickCount(0);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [logoClickCount]);
+
   // フィルタリングされたタスク
   const filteredTasks =
     selectedMemberIds.length > 0
@@ -374,7 +971,9 @@ function App() {
             <img
               src="/taskrader_logo.png"
               alt="TaskRadar"
-              className="h-24 w-auto"
+              className="h-24 w-auto cursor-pointer"
+              onClick={handleLogoClick}
+              title="ロゴを3回クリックでモード切り替え"
             />
           </div>
         </header>
