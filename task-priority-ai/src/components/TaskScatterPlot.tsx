@@ -70,13 +70,37 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
           className="border border-gray-200 rounded"
           onMouseLeave={() => setHoveredTask(null)}
         >
-          {/* clipPathの定義 */}
+          {/* clipPathと矢印マーカーの定義 */}
           <defs>
             {tasks.map((task) => (
               <clipPath key={`clip-${task.id}`} id={`clip-${task.id}`} clipPathUnits="objectBoundingBox">
                 <circle cx="0.5" cy="0.5" r="0.5" />
               </clipPath>
             ))}
+
+            {/* X軸（緊急度）用の矢印マーカー */}
+            <marker
+              id="arrowhead-x"
+              markerWidth="10"
+              markerHeight="10"
+              refX="5"
+              refY="5"
+              orient="auto"
+            >
+              <polygon points="0 0, 10 5, 0 10" fill="#f97316" />
+            </marker>
+
+            {/* Y軸（重要度）用の矢印マーカー */}
+            <marker
+              id="arrowhead-y"
+              markerWidth="10"
+              markerHeight="10"
+              refX="5"
+              refY="5"
+              orient="auto"
+            >
+              <polygon points="0 0, 10 5, 0 10" fill="#3b82f6" />
+            </marker>
           </defs>
 
           {/* 背景の4象限 */}
@@ -118,7 +142,7 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
           />
 
           {/* グリッド線 */}
-          {[0, 2, 4, 6, 8, 10].map((value) => (
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
             <g key={`grid-${value}`}>
               {/* 横線 */}
               <line
@@ -143,66 +167,87 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
             </g>
           ))}
 
-          {/* X軸 */}
+          {/* Y軸（重要度）- 矢印付き */}
           <line
             x1={padding}
             y1={padding + graphHeight}
-            x2={padding + graphWidth}
-            y2={padding + graphHeight}
-            stroke="#374151"
-            strokeWidth={2}
+            x2={padding}
+            y2={padding}
+            stroke="#3b82f6"
+            strokeWidth={5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            markerEnd="url(#arrowhead-y)"
           />
 
-          {/* Y軸 */}
+          {/* X軸（緊急度）- 矢印付き */}
           <line
-            x1={padding}
-            y1={padding}
+            x1={padding + graphWidth}
+            y1={padding + graphHeight}
             x2={padding}
             y2={padding + graphHeight}
-            stroke="#374151"
-            strokeWidth={2}
+            stroke="#f97316"
+            strokeWidth={5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            markerEnd="url(#arrowhead-x)"
           />
 
-          {/* X軸ラベル（緊急度） - 左端に「高」 */}
+          {/* X軸ラベル（緊急度）- 軸に沿って中央に配置 */}
           <text
-            x={padding}
-            y={height - 10}
-            textAnchor="start"
-            className="text-sm font-semibold fill-orange-600"
+            x={padding + graphWidth / 2}
+            y={padding + graphHeight + 40}
+            textAnchor="middle"
+            className="text-base font-bold fill-orange-600"
           >
-            緊急度 高
+            緊急度
           </text>
 
-          {/* X軸ラベル（緊急度） - 右端に「低」 */}
+          {/* Y軸ラベル（重要度）- 軸に沿って中央に配置（回転） */}
           <text
-            x={padding + graphWidth}
-            y={height - 10}
+            x={20}
+            y={padding + graphHeight / 2}
+            textAnchor="middle"
+            transform={`rotate(-90, 20, ${padding + graphHeight / 2})`}
+            className="text-base font-bold fill-blue-600"
+          >
+            重要度
+          </text>
+
+          {/* X軸の端のラベル */}
+          <text
+            x={padding - 5}
+            y={padding + graphHeight + 20}
             textAnchor="end"
-            className="text-sm font-semibold fill-gray-500"
+            className="text-xs font-medium fill-orange-500"
           >
-            緊急度 低
+            高
           </text>
-
-          {/* Y軸ラベル（重要度） - 上端に「高」 */}
           <text
-            x={15}
-            y={padding}
+            x={padding + graphWidth + 5}
+            y={padding + graphHeight + 20}
             textAnchor="start"
-            transform={`rotate(-90, 15, ${padding})`}
-            className="text-sm font-semibold fill-blue-600"
+            className="text-xs font-medium fill-gray-400"
           >
-            重要度 高
+            低
           </text>
 
-          {/* Y軸ラベル（重要度） - 下端に「低」 */}
+          {/* Y軸の端のラベル */}
           <text
-            x={15}
-            y={padding + graphHeight}
-            textAnchor="end"
-            transform={`rotate(-90, 15, ${padding + graphHeight})`}
-            className="text-sm font-semibold fill-gray-500"
+            x={padding - 35}
+            y={padding + 5}
+            textAnchor="middle"
+            className="text-xs font-medium fill-blue-500"
           >
-            重要度 低
+            高
+          </text>
+          <text
+            x={padding - 35}
+            y={padding + graphHeight + 5}
+            textAnchor="middle"
+            className="text-xs font-medium fill-gray-400"
+          >
+            低
           </text>
 
           {/* X軸目盛り */}
@@ -238,14 +283,15 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
             const y = getY(task.importanceScore);
 
             // 緊急度と重要度に基づいてサイズを動的に計算
-            const baseSize = 30;
-            const maxSize = 60;
-            const scoreSum = task.urgencyScore + task.importanceScore;
-            const calculatedSize = baseSize + (scoreSum / 20) * (maxSize - baseSize);
+            // 左上（緊急かつ重要）ほど大きく表示するため、積を使用
+            const baseSize = 25;
+            const maxSize = 70;
+            const scoreProduct = (task.urgencyScore / 10) * (task.importanceScore / 10); // 0-1の範囲に正規化してから積を取る
+            const calculatedSize = baseSize + scoreProduct * (maxSize - baseSize);
             const size = hoveredTask?.id === task.id ? calculatedSize * 1.15 : calculatedSize;
 
             // 緊急かつ重要なタスクの場合は焦っている顔の画像を使用
-            const isUrgentAndImportant = task.urgencyScore >= 7 && task.importanceScore >= 7;
+            const isUrgentAndImportant = task.urgencyScore >= 5 && task.importanceScore >= 5;
             const avatarPath = member && isUrgentAndImportant
               ? member.avatar.replace('.png', '_upset.png')
               : member?.avatar;

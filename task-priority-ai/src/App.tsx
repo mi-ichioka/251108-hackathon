@@ -367,7 +367,7 @@ function App() {
       : tasks;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="text-center">
@@ -384,7 +384,7 @@ function App() {
             <div className="flex justify-center gap-2 mb-3 items-center">
               <button
                 onClick={() => setSelectedMemberIds(MEMBERS.map((m) => m.id))}
-                className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                className="text-xs px-3 py-1 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors"
               >
                 すべて選択
               </button>
@@ -443,7 +443,7 @@ function App() {
                 onClick={() => setViewMode('scatter')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'scatter'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-primary-500 text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
@@ -453,7 +453,7 @@ function App() {
                 onClick={() => setViewMode('list')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-primary-500 text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >

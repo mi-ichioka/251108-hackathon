@@ -32,7 +32,7 @@ export function TaskInput({ onAddTask, isClassifying }: TaskInputProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="例: プロジェクト報告書の作成"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             disabled={isClassifying}
             required
           />
@@ -47,14 +47,14 @@ export function TaskInput({ onAddTask, isClassifying }: TaskInputProps) {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="例: 来週の月曜日までに提出が必要。チームメンバーへの共有も必要。"
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             disabled={isClassifying}
           />
         </div>
         <button
           type="submit"
           disabled={isClassifying || !title.trim()}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+          className="w-full bg-primary-500 text-white py-2 px-4 rounded-md hover:bg-primary-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
         >
           {isClassifying ? 'AI分類中...' : 'タスクを追加'}
         </button>
