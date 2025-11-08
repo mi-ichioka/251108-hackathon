@@ -371,9 +371,13 @@ function App() {
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              TaskRadar
-            </h1>
+            <div className="flex justify-center mb-4">
+              <img
+                src="/taskrader_logo.png"
+                alt="TaskRadar"
+                className="h-32 w-auto"
+              />
+            </div>
             <p className="text-gray-600">
               タスクの優先度を見える化
             </p>
