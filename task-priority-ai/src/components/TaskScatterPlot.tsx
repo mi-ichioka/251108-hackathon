@@ -284,8 +284,8 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
 
             // 緊急度と重要度に基づいてサイズを動的に計算
             // 左上（緊急かつ重要）ほど大きく表示するため、積を使用
-            const baseSize = 25;
-            const maxSize = 70;
+            const baseSize = 37.5; // 25 * 1.5
+            const maxSize = 105; // 70 * 1.5
             const scoreProduct = (task.urgencyScore / 10) * (task.importanceScore / 10); // 0-1の範囲に正規化してから積を取る
             const calculatedSize = baseSize + scoreProduct * (maxSize - baseSize);
             const size = hoveredTask?.id === task.id ? calculatedSize * 1.15 : calculatedSize;
