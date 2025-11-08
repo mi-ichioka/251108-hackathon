@@ -1,6 +1,14 @@
 import { useState } from 'react';
-import type { Task } from '../types/task';
+import type { Task, TaskSource } from '../types/task';
 import { MEMBERS } from '../types/member';
+
+// タスクソースのロゴマッピング
+const SOURCE_LOGOS: Record<TaskSource, string> = {
+  slack: '/slack-logo.png',
+  jira: '/jira_logo.png',
+  backlog: '/backlog_icon.png',
+  mail: '/mail_icon.png',
+};
 
 interface TaskScatterPlotProps {
   tasks: Task[];
@@ -55,10 +63,6 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        タスクマトリクス（重要度 × 緊急度）
-      </h2>
-
       <div className="flex justify-center relative">
         <svg
           width={width}
@@ -159,25 +163,46 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
             strokeWidth={2}
           />
 
-          {/* X軸ラベル（緊急度） */}
+          {/* X軸ラベル（緊急度） - 左端に「高」 */}
           <text
-            x={padding + graphWidth / 2}
+            x={padding}
             y={height - 10}
-            textAnchor="middle"
-            className="text-sm fill-gray-700"
+            textAnchor="start"
+            className="text-sm font-semibold fill-orange-600"
           >
-            緊急度（高 → 低）
+            緊急度 高
           </text>
 
-          {/* Y軸ラベル（重要度） */}
+          {/* X軸ラベル（緊急度） - 右端に「低」 */}
+          <text
+            x={padding + graphWidth}
+            y={height - 10}
+            textAnchor="end"
+            className="text-sm font-semibold fill-gray-500"
+          >
+            緊急度 低
+          </text>
+
+          {/* Y軸ラベル（重要度） - 上端に「高」 */}
           <text
             x={15}
-            y={padding + graphHeight / 2}
-            textAnchor="middle"
-            transform={`rotate(-90, 15, ${padding + graphHeight / 2})`}
-            className="text-sm fill-gray-700"
+            y={padding}
+            textAnchor="start"
+            transform={`rotate(-90, 15, ${padding})`}
+            className="text-sm font-semibold fill-blue-600"
           >
-            重要度（低 → 高）
+            重要度 高
+          </text>
+
+          {/* Y軸ラベル（重要度） - 下端に「低」 */}
+          <text
+            x={15}
+            y={padding + graphHeight}
+            textAnchor="end"
+            transform={`rotate(-90, 15, ${padding + graphHeight})`}
+            className="text-sm font-semibold fill-gray-500"
+          >
+            重要度 低
           </text>
 
           {/* X軸目盛り */}
@@ -211,7 +236,19 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
             const member = MEMBERS.find((m) => m.id === task.assignedTo);
             const x = getX(task.urgencyScore);
             const y = getY(task.importanceScore);
-            const size = hoveredTask?.id === task.id ? 48 : 40;
+
+            // 緊急度と重要度に基づいてサイズを動的に計算
+            const baseSize = 30;
+            const maxSize = 60;
+            const scoreSum = task.urgencyScore + task.importanceScore;
+            const calculatedSize = baseSize + (scoreSum / 20) * (maxSize - baseSize);
+            const size = hoveredTask?.id === task.id ? calculatedSize * 1.15 : calculatedSize;
+
+            // 緊急かつ重要なタスクの場合は焦っている顔の画像を使用
+            const isUrgentAndImportant = task.urgencyScore >= 7 && task.importanceScore >= 7;
+            const avatarPath = member && isUrgentAndImportant
+              ? member.avatar.replace('.png', '_upset.png')
+              : member?.avatar;
 
             return (
               <g key={task.id}>
@@ -226,9 +263,9 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
                 />
 
                 {/* メンバーの顔写真（円形にクリップ） */}
-                {member && (
+                {member && avatarPath && (
                   <image
-                    href={member.avatar}
+                    href={avatarPath}
                     x={x - size / 2}
                     y={y - size / 2}
                     width={size}
@@ -265,6 +302,31 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
                   strokeWidth={2}
                   className="pointer-events-none"
                 />
+
+                {/* サービスロゴ（右下に配置） */}
+                {task.source && (
+                  <g>
+                    {/* ロゴの背景（白い円） */}
+                    <circle
+                      cx={x + size * 0.3}
+                      cy={y + size * 0.3}
+                      r={size * 0.2}
+                      fill="white"
+                      stroke="#e5e7eb"
+                      strokeWidth={1}
+                      className="pointer-events-none"
+                    />
+                    {/* ロゴ画像 */}
+                    <image
+                      href={SOURCE_LOGOS[task.source]}
+                      x={x + size * 0.3 - size * 0.15}
+                      y={y + size * 0.3 - size * 0.15}
+                      width={size * 0.3}
+                      height={size * 0.3}
+                      className="pointer-events-none"
+                    />
+                  </g>
+                )}
               </g>
             );
           })}

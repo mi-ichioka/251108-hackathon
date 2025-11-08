@@ -4,6 +4,8 @@ export type Priority =
   | 'urgent-not-important'  // 緊急だが重要ではない
   | 'not-urgent-not-important'; // 緊急でも重要でもない
 
+export type TaskSource = 'slack' | 'jira' | 'backlog' | 'mail';
+
 export interface Task {
   id: string;
   title: string;
@@ -12,6 +14,7 @@ export interface Task {
   urgencyScore: number;    // 緊急度スコア 0-10
   importanceScore: number; // 重要度スコア 0-10
   assignedTo?: string;     // アサインされたメンバーのID
+  source?: TaskSource;     // タスクの取得元
   createdAt: Date;
   updatedAt: Date;
 }

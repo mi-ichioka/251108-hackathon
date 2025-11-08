@@ -15,7 +15,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'member-2',
     name: '佐藤花子',
-    avatar: '/member2.png',
+    avatar: '/member5.png',
     color: '#ef4444', // red
   },
   {
@@ -33,7 +33,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'member-5',
     name: '高橋健太',
-    avatar: '/member5.png',
+    avatar: '/member2.png',
     color: '#8b5cf6', // purple
   },
 ];

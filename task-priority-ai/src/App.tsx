@@ -13,23 +13,25 @@ const SAMPLE_TASKS: Task[] = [
   // 山田太郎のタスク (member-1)
   {
     id: 'task-1',
-    title: '緊急バグ修正',
-    description: 'クリティカルなバグが発見され今すぐ対応が必要',
+    title: '緊急システム障害対応',
+    description: '本番環境で発生した重大な障害の対応が必要',
     priority: 'urgent-important',
-    urgencyScore: 10,
+    urgencyScore: 9,
     importanceScore: 10,
     assignedTo: 'member-1',
+    source: 'slack',
     createdAt: new Date('2025-11-08T09:00:00'),
     updatedAt: new Date('2025-11-08T09:00:00'),
   },
   {
     id: 'task-2',
-    title: '今日締切のプロジェクト報告書作成',
-    description: 'クライアントへの重要な報告書を本日17時までに提出',
-    priority: 'urgent-important',
-    urgencyScore: 9,
-    importanceScore: 9,
+    title: 'プロジェクト報告書作成',
+    description: 'クライアントへの月次報告書を作成',
+    priority: 'not-urgent-important',
+    urgencyScore: 3,
+    importanceScore: 7,
     assignedTo: 'member-1',
+    source: 'mail',
     createdAt: new Date('2025-11-08T09:15:00'),
     updatedAt: new Date('2025-11-08T09:15:00'),
   },
@@ -39,8 +41,9 @@ const SAMPLE_TASKS: Task[] = [
     description: '新機能のプルリクエストをレビュー',
     priority: 'urgent-not-important',
     urgencyScore: 7,
-    importanceScore: 6,
+    importanceScore: 4,
     assignedTo: 'member-1',
+    source: 'slack',
     createdAt: new Date('2025-11-08T09:30:00'),
     updatedAt: new Date('2025-11-08T09:30:00'),
   },
@@ -48,10 +51,11 @@ const SAMPLE_TASKS: Task[] = [
     id: 'task-4',
     title: '技術ブログ執筆',
     description: '新しい技術スタックについてのブログ記事を書く',
-    priority: 'not-urgent-important',
-    urgencyScore: 3,
-    importanceScore: 7,
+    priority: 'not-urgent-not-important',
+    urgencyScore: 1,
+    importanceScore: 4,
     assignedTo: 'member-1',
+    source: 'backlog',
     createdAt: new Date('2025-11-08T09:45:00'),
     updatedAt: new Date('2025-11-08T09:45:00'),
   },
@@ -60,44 +64,48 @@ const SAMPLE_TASKS: Task[] = [
   {
     id: 'task-5',
     title: '顧客プレゼン資料作成',
-    description: '明日の重要プレゼンの資料を完成させる',
-    priority: 'urgent-important',
-    urgencyScore: 9,
+    description: '来週のプレゼンの資料を準備',
+    priority: 'not-urgent-important',
+    urgencyScore: 2,
     importanceScore: 9,
     assignedTo: 'member-2',
+    source: 'jira',
     createdAt: new Date('2025-11-08T10:00:00'),
     updatedAt: new Date('2025-11-08T10:00:00'),
   },
   {
     id: 'task-6',
-    title: '来週の会議資料準備',
-    description: '重要なプロジェクトキックオフ会議の資料作成',
+    title: '会議資料準備',
+    description: 'プロジェクトキックオフ会議の資料作成',
     priority: 'not-urgent-important',
     urgencyScore: 4,
-    importanceScore: 8,
+    importanceScore: 6,
     assignedTo: 'member-2',
+    source: 'mail',
     createdAt: new Date('2025-11-08T10:15:00'),
     updatedAt: new Date('2025-11-08T10:15:00'),
   },
   {
     id: 'task-7',
-    title: '明日の打ち合わせ準備',
+    title: '打ち合わせ準備',
     description: '定例ミーティングのアジェンダ作成',
     priority: 'urgent-not-important',
-    urgencyScore: 7,
-    importanceScore: 5,
+    urgencyScore: 8,
+    importanceScore: 3,
     assignedTo: 'member-2',
+    source: 'slack',
     createdAt: new Date('2025-11-08T10:30:00'),
     updatedAt: new Date('2025-11-08T10:30:00'),
   },
   {
     id: 'task-8',
-    title: 'チームビルディングイベント企画',
+    title: 'チームイベント企画',
     description: '来月のチームイベントの企画',
     priority: 'not-urgent-not-important',
-    urgencyScore: 2,
-    importanceScore: 4,
+    urgencyScore: 1,
+    importanceScore: 3,
     assignedTo: 'member-2',
+    source: 'slack',
     createdAt: new Date('2025-11-08T10:45:00'),
     updatedAt: new Date('2025-11-08T10:45:00'),
   },
@@ -106,9 +114,10 @@ const SAMPLE_TASKS: Task[] = [
     title: 'メールの整理',
     description: '未読メールの整理と返信',
     priority: 'not-urgent-not-important',
-    urgencyScore: 3,
-    importanceScore: 3,
+    urgencyScore: 2,
+    importanceScore: 2,
     assignedTo: 'member-2',
+    source: 'mail',
     createdAt: new Date('2025-11-08T11:00:00'),
     updatedAt: new Date('2025-11-08T11:00:00'),
   },
@@ -116,34 +125,37 @@ const SAMPLE_TASKS: Task[] = [
   // 鈴木一郎のタスク (member-3)
   {
     id: 'task-10',
-    title: '本番環境のデプロイ',
-    description: '今日中に本番環境へデプロイ作業',
+    title: 'デプロイ準備',
+    description: '本番環境へのデプロイ準備作業',
     priority: 'urgent-important',
-    urgencyScore: 8,
-    importanceScore: 9,
+    urgencyScore: 7,
+    importanceScore: 8,
     assignedTo: 'member-3',
+    source: 'backlog',
     createdAt: new Date('2025-11-08T11:15:00'),
     updatedAt: new Date('2025-11-08T11:15:00'),
   },
   {
     id: 'task-11',
     title: '新機能の要件定義',
-    description: '次期プロジェクトの重要な機能設計',
+    description: '次期プロジェクトの機能設計',
     priority: 'not-urgent-important',
-    urgencyScore: 3,
+    urgencyScore: 2,
     importanceScore: 8,
     assignedTo: 'member-3',
+    source: 'jira',
     createdAt: new Date('2025-11-08T11:30:00'),
     updatedAt: new Date('2025-11-08T11:30:00'),
   },
   {
     id: 'task-12',
-    title: '至急メール返信',
+    title: 'メール返信',
     description: '社内からの問い合わせメールに返信',
     priority: 'urgent-not-important',
-    urgencyScore: 8,
-    importanceScore: 4,
+    urgencyScore: 6,
+    importanceScore: 2,
     assignedTo: 'member-3',
+    source: 'mail',
     createdAt: new Date('2025-11-08T11:45:00'),
     updatedAt: new Date('2025-11-08T11:45:00'),
   },
@@ -152,9 +164,10 @@ const SAMPLE_TASKS: Task[] = [
     title: 'セキュリティ研修受講',
     description: '必須のセキュリティ研修を受講',
     priority: 'not-urgent-important',
-    urgencyScore: 4,
-    importanceScore: 7,
+    urgencyScore: 1,
+    importanceScore: 6,
     assignedTo: 'member-3',
+    source: 'backlog',
     createdAt: new Date('2025-11-08T12:00:00'),
     updatedAt: new Date('2025-11-08T12:00:00'),
   },
@@ -163,33 +176,36 @@ const SAMPLE_TASKS: Task[] = [
   {
     id: 'task-14',
     title: 'デザインレビュー',
-    description: '新UIデザインの最終確認',
-    priority: 'urgent-important',
-    urgencyScore: 7,
-    importanceScore: 8,
+    description: '新UIデザインの確認',
+    priority: 'not-urgent-important',
+    urgencyScore: 3,
+    importanceScore: 7,
     assignedTo: 'member-4',
+    source: 'jira',
     createdAt: new Date('2025-11-08T12:15:00'),
     updatedAt: new Date('2025-11-08T12:15:00'),
   },
   {
     id: 'task-15',
     title: 'ユーザビリティテスト計画',
-    description: '来週のユーザビリティテストの計画作成',
-    priority: 'not-urgent-important',
-    urgencyScore: 5,
-    importanceScore: 7,
+    description: 'ユーザビリティテストの計画作成',
+    priority: 'urgent-important',
+    urgencyScore: 6,
+    importanceScore: 6,
     assignedTo: 'member-4',
+    source: 'backlog',
     createdAt: new Date('2025-11-08T12:30:00'),
     updatedAt: new Date('2025-11-08T12:30:00'),
   },
   {
     id: 'task-16',
-    title: 'SNSをチェック',
+    title: 'SNSチェック',
     description: '業界のトレンドを確認',
     priority: 'not-urgent-not-important',
-    urgencyScore: 2,
-    importanceScore: 3,
+    urgencyScore: 1,
+    importanceScore: 2,
     assignedTo: 'member-4',
+    source: 'slack',
     createdAt: new Date('2025-11-08T12:45:00'),
     updatedAt: new Date('2025-11-08T12:45:00'),
   },
@@ -197,10 +213,11 @@ const SAMPLE_TASKS: Task[] = [
     id: 'task-17',
     title: 'オフィス備品の発注',
     description: '文房具の在庫確認と発注',
-    priority: 'not-urgent-not-important',
-    urgencyScore: 3,
-    importanceScore: 2,
+    priority: 'urgent-not-important',
+    urgencyScore: 5,
+    importanceScore: 1,
     assignedTo: 'member-4',
+    source: 'mail',
     createdAt: new Date('2025-11-08T13:00:00'),
     updatedAt: new Date('2025-11-08T13:00:00'),
   },
@@ -208,23 +225,25 @@ const SAMPLE_TASKS: Task[] = [
   // 高橋健太のタスク (member-5)
   {
     id: 'task-18',
-    title: '今日中に提出する必須書類の作成',
-    description: '期限が今日の重要書類',
-    priority: 'urgent-important',
+    title: '書類作成',
+    description: '提出用の書類を作成',
+    priority: 'urgent-not-important',
     urgencyScore: 9,
-    importanceScore: 8,
+    importanceScore: 4,
     assignedTo: 'member-5',
+    source: 'mail',
     createdAt: new Date('2025-11-08T13:15:00'),
     updatedAt: new Date('2025-11-08T13:15:00'),
   },
   {
     id: 'task-19',
-    title: '本番リリースの準備',
-    description: '来週のリリースに向けた最終確認と準備',
+    title: 'リリース準備',
+    description: '来週のリリースに向けた準備',
     priority: 'not-urgent-important',
-    urgencyScore: 5,
+    urgencyScore: 2,
     importanceScore: 9,
     assignedTo: 'member-5',
+    source: 'jira',
     createdAt: new Date('2025-11-08T13:30:00'),
     updatedAt: new Date('2025-11-08T13:30:00'),
   },
@@ -233,9 +252,10 @@ const SAMPLE_TASKS: Task[] = [
     title: 'ドキュメント更新',
     description: 'プロジェクトドキュメントの更新',
     priority: 'not-urgent-important',
-    urgencyScore: 4,
-    importanceScore: 6,
+    urgencyScore: 1,
+    importanceScore: 5,
     assignedTo: 'member-5',
+    source: 'backlog',
     createdAt: new Date('2025-11-08T13:45:00'),
     updatedAt: new Date('2025-11-08T13:45:00'),
   },
@@ -244,9 +264,10 @@ const SAMPLE_TASKS: Task[] = [
     title: '電話対応',
     description: '外部からの問い合わせ電話対応',
     priority: 'urgent-not-important',
-    urgencyScore: 6,
-    importanceScore: 3,
+    urgencyScore: 7,
+    importanceScore: 2,
     assignedTo: 'member-5',
+    source: 'slack',
     createdAt: new Date('2025-11-08T14:00:00'),
     updatedAt: new Date('2025-11-08T14:00:00'),
   },
@@ -255,9 +276,10 @@ const SAMPLE_TASKS: Task[] = [
     title: 'ランチミーティング',
     description: 'チームメンバーとのランチミーティング',
     priority: 'not-urgent-not-important',
-    urgencyScore: 2,
-    importanceScore: 4,
+    urgencyScore: 1,
+    importanceScore: 3,
     assignedTo: 'member-5',
+    source: 'slack',
     createdAt: new Date('2025-11-08T14:15:00'),
     updatedAt: new Date('2025-11-08T14:15:00'),
   },
@@ -268,6 +290,7 @@ function App() {
   const [isClassifying, setIsClassifying] = useState(false);
   const [viewMode, setViewMode] = useState<'scatter' | 'list'>('scatter');
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
+  const [isTaskInputOpen, setIsTaskInputOpen] = useState(false);
 
   // ローカルストレージからタスクを読み込み
   useEffect(() => {
@@ -323,13 +346,6 @@ function App() {
 
   const handleDeleteTask = (id: string) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
-  };
-
-  const handleClearAllTasks = () => {
-    if (window.confirm('すべてのタスクを削除しますか？')) {
-      setTasks([]);
-      localStorage.removeItem(STORAGE_KEY);
-    }
   };
 
   const handleMemberClick = (memberId: string) => {
@@ -444,24 +460,48 @@ function App() {
                 一覧表示
               </button>
             </div>
-            {tasks.length > 0 && (
-              <button
-                onClick={handleClearAllTasks}
-                className="text-sm text-red-600 hover:text-red-700 underline"
-              >
-                すべてのタスクを削除
-              </button>
-            )}
           </div>
         </header>
-
-        <TaskInput onAddTask={handleAddTask} isClassifying={isClassifying} />
 
         {viewMode === 'scatter' ? (
           <TaskScatterPlot tasks={filteredTasks} onDeleteTask={handleDeleteTask} />
         ) : (
           <TaskList tasks={filteredTasks} onDeleteTask={handleDeleteTask} />
         )}
+
+        {/* 新しいタスクを追加（折りたたみ可能） */}
+        <div className="mt-8">
+          <button
+            onClick={() => setIsTaskInputOpen(!isTaskInputOpen)}
+            className="w-full bg-white rounded-lg shadow-md p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-xl">➕</span>
+              <span className="font-semibold text-gray-800">新しいタスクを追加</span>
+            </div>
+            <svg
+              className={`w-5 h-5 text-gray-600 transition-transform ${
+                isTaskInputOpen ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          {isTaskInputOpen && (
+            <div className="mt-4">
+              <TaskInput onAddTask={handleAddTask} isClassifying={isClassifying} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
