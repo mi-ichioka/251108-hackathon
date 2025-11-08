@@ -370,17 +370,14 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
+          <div>
+            <div className="flex justify-start mb-2">
               <img
                 src="/taskrader_logo.png"
                 alt="TaskRadar"
-                className="h-32 w-auto"
+                className="h-24 w-auto"
               />
             </div>
-            <p className="text-gray-600">
-              タスクの優先度を見える化
-            </p>
           </div>
 
           {/* メンバーフィルタ */}

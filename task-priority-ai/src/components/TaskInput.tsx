@@ -19,8 +19,7 @@ export function TaskInput({ onAddTask, isClassifying }: TaskInputProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">新しいタスクを追加</h2>
+    <div className="mb-8">
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
