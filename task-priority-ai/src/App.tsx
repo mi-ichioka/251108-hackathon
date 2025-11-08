@@ -372,10 +372,10 @@ function App() {
         <header className="mb-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              AI タスク優先度管理
+              TaskRadar
             </h1>
             <p className="text-gray-600">
-              アイゼンハワーマトリクスでタスクを自動分類
+              タスクの優先度を見える化
             </p>
           </div>
 
