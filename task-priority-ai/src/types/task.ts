@@ -9,6 +9,9 @@ export interface Task {
   title: string;
   description?: string;
   priority?: Priority;
+  urgencyScore: number;    // 緊急度スコア 0-10
+  importanceScore: number; // 重要度スコア 0-10
+  assignedTo?: string;     // アサインされたメンバーのID
   createdAt: Date;
   updatedAt: Date;
 }
