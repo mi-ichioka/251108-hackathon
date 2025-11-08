@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Task, TaskSource } from '../types/task';
 import { MEMBERS } from '../types/member';
 
@@ -18,10 +18,29 @@ interface TaskScatterPlotProps {
 export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
   const [hoveredTask, setHoveredTask] = useState<Task | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 700 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // コンテナのサイズを取得してSVGのサイズを設定
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // 幅はコンテナいっぱい、高さは幅の約58%（アスペクト比を維持）
+        const newWidth = Math.max(containerWidth - 48, 800); // 最小800px
+        const newHeight = Math.max(newWidth * 0.58, 600); // 最小600px
+        setDimensions({ width: newWidth, height: newHeight });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   // グラフの設定
-  const width = 800;
-  const height = 600;
+  const width = dimensions.width;
+  const height = dimensions.height;
   const padding = 60;
   const graphWidth = width - padding * 2;
   const graphHeight = height - padding * 2;
@@ -62,12 +81,12 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-center relative">
+    <div ref={containerRef} className="bg-white rounded-lg shadow-md p-6">
+      <div className="relative w-full flex justify-center">
         <svg
           width={width}
           height={height}
-          className="border border-gray-200 rounded"
+          className="border border-gray-200 rounded max-w-full"
           onMouseLeave={() => setHoveredTask(null)}
         >
           {/* clipPathと矢印マーカーの定義 */}
@@ -284,8 +303,8 @@ export function TaskScatterPlot({ tasks, onDeleteTask }: TaskScatterPlotProps) {
 
             // 緊急度と重要度に基づいてサイズを動的に計算
             // 左上（緊急かつ重要）ほど大きく表示するため、積を使用
-            const baseSize = 37.5; // 25 * 1.5
-            const maxSize = 105; // 70 * 1.5
+            const baseSize = 60; // 25 * 2.4
+            const maxSize = 150; // 70 * 2.14
             const scoreProduct = (task.urgencyScore / 10) * (task.importanceScore / 10); // 0-1の範囲に正規化してから積を取る
             const calculatedSize = baseSize + scoreProduct * (maxSize - baseSize);
             const size = hoveredTask?.id === task.id ? calculatedSize * 1.15 : calculatedSize;

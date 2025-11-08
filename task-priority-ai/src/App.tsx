@@ -370,19 +370,18 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
-          <div>
-            <div className="flex justify-start mb-2">
-              <img
-                src="/taskrader_logo.png"
-                alt="TaskRadar"
-                className="h-24 w-auto"
-              />
-            </div>
+          <div className="flex justify-start">
+            <img
+              src="/taskrader_logo.png"
+              alt="TaskRadar"
+              className="h-24 w-auto"
+            />
           </div>
+        </header>
 
-          {/* メンバーフィルタ */}
-          <div className="mt-6">
-            <div className="flex justify-center gap-2 mb-3 items-center">
+        {/* メンバーフィルタ */}
+        <div className="mb-6">
+          <div className="flex justify-center gap-2 mb-3 items-center">
               <button
                 onClick={() => setSelectedMemberIds(MEMBERS.map((m) => m.id))}
                 className="text-xs px-3 py-1 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors"
@@ -435,7 +434,6 @@ function App() {
                 </button>
               );
             })}
-            </div>
           </div>
 
           <div className="mt-4 flex justify-center gap-4 flex-wrap items-center">
@@ -462,7 +460,7 @@ function App() {
               </button>
             </div>
           </div>
-        </header>
+        </div>
 
         {viewMode === 'scatter' ? (
           <TaskScatterPlot tasks={filteredTasks} onDeleteTask={handleDeleteTask} />
